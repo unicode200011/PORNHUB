@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.org.customer.dao.LoginDao">
+	<select id="login" parameterType="map" resultType="map">
+		SELECT
+		c.pornhub_customer_id,
+		c.pornhub_customer_account,
+		c.pornhub_customer_password,
+		c.pornhub_customer_type,
+		pornhub_customer_vip_time
+		FROM
+		pornhub_customer c
+		WHERE c.pornhub_customer_account = #{pornhub_customer_account}
+		AND c.pornhub_customer_password = #{pornhub_customer_password}
+		AND c.enable_flag = 1
+	</select>
+
+</mapper>

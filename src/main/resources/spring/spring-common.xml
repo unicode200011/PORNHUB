@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task.xsd">
+	<!-- 使用Spring加载读取properties配置文件参数.解析 properties后缀名文件.读取jdbc配置 <bean id="jdbc" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" p:location="classpath:spring/jdbc.properties" /> -->
+
+	<bean id="properties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:properties/jdbc.properties</value>
+				<value>classpath:properties/platform.properties</value>
+				<!-- <value>classpath:properties/redis.properties</value> -->
+			</list>
+		</property>
+	</bean>
+	<!-- <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"> <property name="maxWaitMillis" value="${redis.max_wait}" /> <property name="maxTotal" value="${redis.max_active}" /> <property name="maxIdle" value="${redis.max_idle}"></property> <property name="minIdle" value="${redis.min_idle}"></property> 
+		<property name="testOnBorrow" value="${redis.test_on_boorow}"></property> <property name="testOnReturn" value="${redis.test_on_return}"></property> <property name="testWhileIdle" value="${redis.test_while_idle}"></property> <property name="numTestsPerEvictionRun" value="${redis.num_tests_per_eviction_run}"></property> 
+		<property name="timeBetweenEvictionRunsMillis" value="${redis.time_between_eviction_runs_millis}"></property> <property name="minEvictableIdleTimeMillis" value="${redis.soft_min_evictable_idle_time_millis}"></property> </bean> <bean id="jedisPool" class="com.common.util.JedisUtil"> <constructor-arg index="0" 
+		ref="jedisPoolConfig" /> <constructor-arg index="1" value="${redis.host}" /> <constructor-arg index="2" value="${redis.port}" type="int" /> <constructor-arg index="3" value="${redis.timeout}" type="int" /> <constructor-arg index="4" value="${redis.pass}" /> </bean> -->
+	<!-- 阿里 druid数据库连接池 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+		<!-- 数据库基本信息配置 -->
+		<property name="url" value="${url}" />
+		<property name="username" value="${username}" />
+		<property name="password" value="${password}" />
+		<property name="driverClassName" value="${driverClassName}" />
+		<property name="filters" value="${filters}" />
+		<!-- 最大并发连接数 -->
+		<property name="maxActive" value="${maxActive}" />
+		<!-- 初始化连接数量 -->
+		<property name="initialSize" value="${initialSize}" />
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="${maxWait}" />
+		<!-- 最小空闲连接数 -->
+		<property name="minIdle" value="${minIdle}" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+		<property name="validationQuery" value="${validationQuery}" />
+		<property name="testWhileIdle" value="${testWhileIdle}" />
+		<property name="testOnBorrow" value="${testOnBorrow}" />
+		<property name="testOnReturn" value="${testOnReturn}" />
+		<property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements}" />
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="${removeAbandoned}" />
+		<!-- 1800秒，也就是30分钟 -->
+		<property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="${logAbandoned}" />
+	</bean>
+
+	<!-- 事务控制 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 日志处理.拦截以Service结尾的请求 -->
+	<bean id="throwsAdvice" class="com.common.base.ThrowableManage" />
+
+
+	<bean id="beanNameAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>*Service</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<value>throwsAdvice</value>
+		</property>
+	</bean>
+
+	<context:component-scan base-package="com.org.*">
+		<context:exclude-filter type="regex" expression="com.org.*.web.*" />
+	</context:component-scan>
+
+	<!-- MyBatis配置 -->
+	<bean id="sqlSessionFactory" class="com.common.base.PackagesSqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描pojo目录, 并注册 -->
+		<property name="typeAliasesPackage" value="com.org.*.pojo" />
+		<!-- 显式指定Mapper文件位置 -->
+		<property name="mapperLocations" value="classpath:mybatis/*Mapper.xml" />
+	</bean>
+
+	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.org.*.dao" />
+		<property name="annotationClass" value="com.common.base.MyBatisRepository" />
+	</bean>
+
+
+	<!-- 声明自动为spring容器中那些配置@aspectJ切面的bean创建代理，织入切面 -->
+	<aop:aspectj-autoproxy />
+
+	<!-- 支持事务注解的（@Transactional） -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- 用于激活那些已经在spring容器里注册过的bean -->
+	<context:annotation-config />
+
+	<task:annotation-driven />
+	<context:annotation-config />
+
+</beans>

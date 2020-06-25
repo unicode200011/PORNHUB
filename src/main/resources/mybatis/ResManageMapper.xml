@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.org.backstage.dao.ResManageDao">
+	<insert id="insertRes" parameterType="com.org.backstage.pojo.PornhubCartoonInfo" useGeneratedKeys="true" keyProperty="pornhubCartoonInfoId">
+		INSERT INTO `pornhub`.`pornhub_cartoon_info` (
+		`pornhub_cartoon_id`,
+		`pornhub_cartoon_info_name`,
+		`pornhub_cartoon_info_url`
+		)
+		VALUES
+		(
+		#{pornhubCartoonId},
+		#{pornhubCartoonInfoName},
+		#{pornhubCartoonInfoUrl}
+		) ;
+	</insert>
+
+
+	<insert id="insertCartoon" parameterType="com.org.backstage.pojo.PornhubCartoon" useGeneratedKeys="true" keyProperty="pornhubCartoonId">
+		INSERT INTO `pornhub`.`pornhub_cartoon` (
+		`pornhub_cartoon_name`,
+		`pornhub_cartoon_author`,
+		`pornhub_cartoon_type`,
+		`pornhub_cartoon_sort`,
+		`pornhub_cartoon_img_url`,
+		`pornhub_cartoon_pages`
+		)
+		VALUES
+		(
+		#{pornhubCartoonName},
+		#{pornhubCartoonAuthor},
+		#{pornhubCartoonType},
+		#{pornhubCartoonSort},
+		#{pornhubCartoonImgUrl},
+		#{pornhubCartoonPages}
+		) ;
+	</insert>
+
+	<insert id="insertCard" parameterType="com.org.backstage.pojo.PornhubCard">
+		INSERT INTO `pornhub`.`pornhub_card` (
+		`pornhub_card_number`,
+		`pornhub_card_password`,
+		`pornhub_card_type`
+		)
+		VALUES
+		(
+		#{pornhub_card_number},
+		#{pornhub_card_password},
+		#{pornhub_card_type}
+		) ;
+	</insert>
+
+	<insert id="insertVideo" parameterType="com.org.backstage.pojo.PornhubVideo" useGeneratedKeys="true" keyProperty="pornhub_video_id">
+		INSERT INTO pornhub_video (
+		pornhub_video_name,
+		pornhub_video_type,
+		pornhub_video_sort,
+		pornhub_video_img_url,
+		pornhub_video_duration,
+		pornhub_video_download
+		)
+		VALUES
+		(#{pornhub_video_name},#{pornhub_video_type},#{pornhub_video_sort},#{pornhub_video_img_url},#{pornhub_video_duration},#{pornhub_video_download}) ;
+	</insert>
+
+</mapper>

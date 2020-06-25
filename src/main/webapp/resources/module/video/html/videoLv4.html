@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>ProjectHub</title>
+<!-- 图标 -->
+<link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon" />
+<!--告诉浏览器能够响应屏幕宽度 -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+<link rel="stylesheet" href="/resources/common/css/common.css">
+</head>
+<body>
+	<div class="container">
+		<div id="top"></div>
+		<div class="well well-sm ">
+			<div class="row" id="row1"></div>
+			<img id="videoLv4_loading" src="/resources/common/images/loading.gif" style="display: none;">
+
+			<button type="button" class="btn btn-primary btn-lg btn-block" onclick="loadmh()" id="btn_load" style="display: none;">点我加载更多 ...</button>
+
+			<div class="alert alert-success" role="alert" style="display: none;" id="p_l">
+				<h4 class="text-center">所有内容已经加载完毕</h4>
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+	<script src="/resources/common/js/common.js"></script>
+	<script>
+		var cur_page = -20; //开始
+		var page_size = 20;//结束
+		var loads = true; //是否继续加载
+		$(document).ready(function()
+		{
+			$('#top').load('/resources/common/html/top.html');
+			DateFormat();
+			loadmh();
+		});
+
+		function loadmh()
+		{
+			if (!loads) { return }
+			var url = decodeURI(window.location.href);
+
+			var argsIndex = url.split("searchText=");
+
+			var arg = argsIndex[1];
+
+			//每次到底 在查询10页
+			cur_page = cur_page + 20;
+
+			$.ajax({
+			url : "/resourcesController/getVideoLv4.do", // 请求后台的URL（*）,
+			type : 'GET', // 请求方式（*）
+			dataType : "JSON",
+			data : {
+			"cur_page" : cur_page,
+			"page_size" : page_size,
+			"search" : arg
+			},
+			beforeSend : function()
+			{
+				$("#videoLv4_loading").attr("style", "display:");
+
+				$("#btn_load").attr("style", "display:none");
+
+			},
+			complete : function()
+			{
+				$("#videoLv4_loading").attr("style", "display:none");
+
+				$("#btn_load").attr("style", "display:");
+			},
+			error : function(e)
+			{
+				$("#videoLv4_loading").attr("style", "display:none");
+
+				$("#btn_load").attr("style", "display:none");
+
+			},
+			success : function(result)
+			{
+				if (result.length > 0)
+				{
+					var htmle = "";
+					for ( var i in result)
+					{
+						var date = new Date(result[i].create_timestamp);
+						htmle += "<div class ='col-md-3'>";
+						htmle += "<a class='thumbnail' href='videoLv2.html?id=" + result[i].pornhub_video_id + "'>";
+						htmle += "<img id='mh_img"+result[i].pornhub_video_id+"' class='img_c' src="+result[i].pornhub_video_img_url+">";
+						htmle += "<p class='p1 cut'>" + result[i].pornhub_video_name + "</p>";
+						htmle += "<ul class='list-inline p1' >";
+						htmle += "<span class='glyphicon glyphicon-facetime-video' style='font-size: 10px'></span>";
+						htmle += "<li>" + result[i].pornhub_video_duration + "</li>";
+						htmle += "<span class='glyphicon glyphicon-time' style='font-size: 10px'></span>";
+						htmle += "<li>" + date.Format("yyyy-MM-dd") + "</li>";
+						htmle += "</ul>";
+						htmle += "</a>";
+						htmle += "</div>";
+					}
+					$('#row1').append(htmle);
+				} else
+				{
+					loads = false;
+					$("#p_l").removeAttr("style");
+				}
+			}
+			})
+		};
+	</script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>login</title>
+<link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<div id="top"></div>
+		<div class="well well-sm">
+			<h1 class="text-center">登录</h1>
+			
+			<div id="userNameDiv" class="row col-md-offset-4">
+				<div class="col-md-6 col-xs-12">
+					<div class="input-group input-group-lg ">
+						<span class="input-group-addon">帐号</span>
+						<input id="account" type="text" class="form-control" placeholder="请输入帐号..." maxlength="25">
+						<span class="input-group-btn">
+							<button id="cleanerAccount" type="button" class="btn btn-default">
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</span>
+					</div>
+					<p id="accountTip" class="text-danger">&nbsp;</p>
+				</div>
+			</div>
+
+			<br />
+
+			<div id="passWordDiv" class="row col-md-offset-4">
+				<div class="col-md-6 col-xs-12">
+					<div class="input-group input-group-lg">
+						<span class="input-group-addon">密码</span>
+						<input id="passWord" type="password" class="form-control" placeholder="请输入密码..." maxlength="15">
+						<span class="input-group-btn">
+							<button id="openPassWord" type="button" class="btn btn-default" aria-label="open">
+								<span class="glyphicon glyphicon-eye-open"></span>
+							</button>
+						</span>
+					</div>
+					<p id="passWordTip" class="text-danger">&nbsp;</p>
+				</div>
+			</div>
+
+			<br />
+
+			<div class="row col-md-offset-4">
+				<div class="col-md-9 col-xs-12">
+					<div class="captcha-chat ">
+						<div class="captcha-container media">
+							<div class="media-body">
+								请输入验证码
+								<b class="text-warning">(区分大小写)</b>
+							</div>
+							<div id="captcha">
+								<div class="controls">
+									<div id="vld" class="col-xs-5 col-md-4 " style="padding-left: 0px;">
+										<input class="user-text form-control " placeholder="输入验证码" type="text" />
+									</div>
+									<button class="validate btn btn-default">确定</button>
+									<button class="refresh btn btn-default">刷新</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<p id="vldTip" class="text-danger">&nbsp;</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row col-md-offset-4">
+		<div class="col-md-6">
+			<button id="loginBtn" type="button" class="btn btn-primary btn-lg btn-block">登录</button>
+			<a class="btn btn-success btn-lg btn-block" href="/reg.html"> 注册 </a>
+		</div>
+	</div>
+
+
+	<script src="/resources/common/js/common.js"></script>
+	<script src="/resources/plugins/client_captcha.min.js"></script>
+	<script type="text/javascript">
+		var testNumber = false;
+		$(document).ready(function()
+		{
+			$('#top').load('/resources/common/html/top.html');
+
+			//验证码
+			verify();
+
+			//密码输入框 可见不可见JS
+			$("#openPassWord").click(function()
+			{
+				if ($("#passWord").attr("type") == "password")
+				{
+					$("#passWord").attr("type", "text");
+				} else
+				{
+					$("#passWord").attr("type", "password");
+				}
+			});
+
+			$("#loginBtn").click(function()
+			{
+				login()
+			});
+		});
+
+		function login()
+		{
+			var account = $("#account").val().trim();
+			var passWord = $("#passWord").val().trim();
+			var test = false;
+			test = verifylogin();
+			if (test)
+			{
+				$("#loginBtn").html("登陆中");
+				$("#loginBtn").attr("disabled", "disabled");
+
+				$.ajax({
+				type : "GET",
+				url : "/loginController/login.do",
+				traditional : true,
+				dataType : "JSON",
+				data : {
+				"account" : account,
+				"passWord" : passWord
+				},
+				success : function(result)
+				{
+					if (result == 100)
+					{
+						$("#userNameDiv").addClass("has-error"); //变色
+						$("#passWordDiv").addClass("has-error"); //变色
+						$("#accountTip").html("帐号或密码错误.");
+						$("#passWordTip").html("帐号或密码错误.");
+						$("#loginBtn").html("登录");
+						$("#loginBtn").removeAttr("disabled", "disabled");
+					} else if (result == 200)
+					{
+						$(location).attr("href", "/index.html");
+					}
+				}
+				});
+			}
+		};
+
+		//帐号密码输入规范校验
+		function verifylogin()
+		{
+			var userNameReg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/; //帳號必須為郵箱格式
+			var passWordReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$/;//密码中只能包含字母和数字
+			var account = $("#account").val().trim();
+			var passWord = $("#passWord").val().trim();
+			var test = false;
+
+			if (account == null || account == "")
+			{
+				$("#accountTip").html("帐号不能为空.");
+			} else if (!userNameReg.test(account))
+			{
+				$("#accountTip").html("请输入正确的邮箱格式.");
+			} else if (passWord == null || passWord == "")
+			{
+				$("#accountTip").html("ok");
+				$("#passWordTip").html("密码不能为空.");
+			} else if (!passWordReg.test(passWord))
+			{
+				$("#accountTip").html("ok");
+				$("#passWordTip").html("请输入正确的密码,密码长度因大于6位,并且必须包含数字与字母.");
+			} else if (!testNumber)
+			{
+				$("#accountTip").html("ok");
+				$("#passWordTip").html("ok");
+				$("#vldTip").html("请输入正确的验证码,并点击确定");
+			} else
+			{
+				test = true;
+			}
+			return test;
+		};
+
+		//验证码 校验与初始化
+		function verify()
+		{
+			var captcha = new $.Captcha({ //initialize captcha  
+			selector : "#captcha",
+			text : null,
+			randomText : true,
+			randomColours : true,
+			width : 280,
+			height : 190,
+			colour1 : null,
+			colour2 : null,
+			font : 'normal 50px "Microsoft YaHei"',
+			onFailure : function()
+			{
+				$("#vld").addClass("has-error");
+				testNumber = false;
+			},
+			onSuccess : function()
+			{
+				$("#vld").removeClass("has-error");
+				$("#vld").addClass("has-success");
+				testNumber = true;
+			}
+			});
+			captcha.generate(); //Generate or refresh captcha
+			captcha.validate(); //validate filled captcha     
+		};
+	</script>
+</body>
+</html>

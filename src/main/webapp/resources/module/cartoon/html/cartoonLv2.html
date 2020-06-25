@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>ProjectHub</title>
+<!-- 图标 -->
+<link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon" />
+<!--告诉浏器能够响应屏幕宽度 -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+<link rel="stylesheet" href="/resources/common/css/common.css">
+</head>
+
+<body>
+
+	<div class="container">
+		<div id="top"></div>
+		<div class="row well well-sm">
+			<div class="col-xs-6 col-md-2" style="padding-right: 5px;">
+				<a id="mh0" class="thumbnail">
+					<img id="res_img" alt="正在加载" class="img-responsive center-block">
+				</a>
+			</div>
+
+			<div class="col-xs-6 col-md-2" style="padding-left: 0px;">
+				<ul class="list-group">
+					<li class="list-group-item">
+						<span class="glyphicon glyphicon-font" style="font-size: 20px"></span>
+						<small id="pornhub_cartoon_name" style="padding-left: 10px;"></small>
+					</li>
+					<li class="list-group-item">
+						<span class="glyphicon glyphicon-user" style="font-size: 20px"></span>
+						<small id="pornhub_cartoon_author" style="padding-left: 10px;"></small>
+					</li>
+					<li class="list-group-item">
+						<span class="glyphicon glyphicon-file" style="font-size: 20px"></span>
+						<small id="pornhub_cartoon_pages" style="padding-left: 10px;"></small>
+					</li>
+					<li class="list-group-item">
+						<span class="glyphicon glyphicon-time" style="font-size: 20px"></span>
+						<small id="create_timestamp" style="padding-left: 10px;"></small>
+					</li>
+				</ul>
+				<a id="linkInfoMH" class="btn btn-success btn-lg btn-block">观看</a>
+			</div>
+		</div>
+	</div>
+
+
+
+</body>
+
+
+<script src="/resources/common/js/common.js"></script>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+
+		$('#top').load('/resources/common/html/top.html');
+		DateFormat();
+		loadInfo();
+	});
+
+	function loadInfo()
+	{
+		var url = decodeURI(window.location.href);
+
+		var argsIndex = url.split("?");
+
+		var arg = argsIndex[1];
+
+		var userNameReg = /^\+?[1-9][0-9]*$/; //验证非零的正整数
+
+		if (userNameReg.test(arg))
+		{
+			$.ajax({
+			type : "POST",
+			url : "/resourcesController/getCartoonLv2.do",
+			traditional : true,
+			dataType : "JSON",
+			data : {
+				"id" : arg
+			},
+			success : function(result)
+			{
+				var date = new Date(result.create_timestamp);
+				$('#res_img').attr("src", result.pornhub_cartoon_img_url);
+				$("#pornhub_cartoon_name").html(result.pornhub_cartoon_name);
+				$("#pornhub_cartoon_author").html(result.pornhub_cartoon_author);
+				$("#pornhub_cartoon_pages").html(result.pornhub_cartoon_pages + "P");
+				$("#create_timestamp").html(date.Format("yyyy-MM-dd"));
+				$('#linkInfoMH').attr("href", "/resources/module/cartoon/html/cartoonLv3.html?" + result.pornhub_cartoon_id);
+			}
+			});
+		}
+	};
+
+	function test()
+	{
+
+	}
+</script>
+
+</html>
+
+
+
+
+
+
+

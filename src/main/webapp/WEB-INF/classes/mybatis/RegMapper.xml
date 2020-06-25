@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.org.customer.dao.RegDao">
+	<select id="verificationAccount" parameterType="String" resultType="Integer">
+		SELECT
+		COUNT(1)
+		FROM
+		pornhub_customer
+		WHERE pornhub_customer_account = #{userAccount}
+	</select>
+
+	<select id="verificationIp" parameterType="String" resultType="Integer">
+		SELECT
+		COUNT(1)
+		FROM
+		pornhub_customer
+		WHERE pornhub_customer_register_ip = #{ip}
+	</select>
+
+	<insert id="regCustomer" parameterType="map">
+		INSERT INTO `pornhub`.`pornhub_customer` (
+		`pornhub_customer_account`,
+		`pornhub_customer_password`,
+		`pornhub_customer_type`,
+		`pornhub_customer_register_ip`,
+		`pornhub_customer_vip_time`,
+		`pornhub_customer_invitation_code`,
+		`create_user`
+		)
+		VALUES
+		(
+		#{pornhub_customer_account},
+		#{pornhub_customer_password},
+		#{pornhub_customer_type},
+		#{pornhub_customer_register_ip},
+		#{pornhub_customer_vip_time},
+		#{pornhub_customer_invitation_code},
+		#{create_user}
+		) ;
+	</insert>
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.org.resources.dao.ResourcesDao">
+	<select id="getCartoonLv1" resultType="map" parameterType="map">
+		SELECT
+		pornhub_cartoon_id,
+		pornhub_cartoon_name,
+		pornhub_cartoon_author,
+		pornhub_cartoon_type,
+		pornhub_cartoon_sort,
+		pornhub_cartoon_img_url,
+		pornhub_cartoon_pages,
+		create_timestamp
+		FROM
+		pornhub_cartoon
+		WHERE enable_flag = 1
+		ORDER BY
+		create_timestamp DESC
+		LIMIT
+		#{cur_page}, #{page_size}
+	</select>
+
+	<select id="getCartoonLv2" resultType="map" parameterType="String">
+		SELECT
+		pornhub_cartoon_id,
+		pornhub_cartoon_name,
+		pornhub_cartoon_author,
+		pornhub_cartoon_type,
+		pornhub_cartoon_sort,
+		pornhub_cartoon_img_url,
+		pornhub_cartoon_pages,
+		create_timestamp
+		FROM
+		pornhub_cartoon
+		WHERE pornhub_cartoon_id = #{id}
+		AND
+		enable_flag = 1
+	</select>
+
+	<select id="getCartoonLv3" resultType="map" parameterType="map">
+		SELECT
+		pornhub_cartoon_info_name,
+		pornhub_cartoon_info_url,
+		create_timestamp
+		FROM
+		pornhub_cartoon_info r
+		WHERE
+		r.`pornhub_cartoon_id` = #{pornhub_cartoon_id}
+		ORDER BY r.`pornhub_cartoon_info_name`
+		LIMIT #{cur_page}, #{page_size}
+	</select>
+
+	<select id="getCartoonLv4" resultType="map" parameterType="map">
+		SELECT
+		pornhub_cartoon_id,
+		pornhub_cartoon_name,
+		pornhub_cartoon_author,
+		pornhub_cartoon_type,
+		pornhub_cartoon_sort,
+		pornhub_cartoon_img_url,
+		pornhub_cartoon_pages,
+		create_timestamp
+		FROM
+		pornhub_cartoon
+		WHERE enable_flag = 1
+		<if test="search != null and '' != search ">
+			AND pornhub_cartoon_name LIKE CONCAT('%',#{search},'%')
+			OR pornhub_cartoon_author LIKE CONCAT('%',#{search},'%')
+		</if>
+		ORDER BY create_timestamp DESC
+		LIMIT
+		#{cur_page}, #{page_size}
+	</select>
+
+	<select id="getVideoLv4" resultType="map" parameterType="map">
+		SELECT
+		pornhub_video_id,
+		pornhub_video_name,
+		pornhub_video_type,
+		pornhub_video_sort,
+		pornhub_video_img_url,
+		pornhub_video_duration,
+		create_timestamp
+		FROM
+		pornhub_video
+		WHERE enable_flag = 1
+		<if test="search != null and '' != search ">
+			AND pornhub_video_name LIKE CONCAT('%',#{search},'%')
+		</if>
+		ORDER BY create_timestamp DESC
+		LIMIT
+		#{cur_page}, #{page_size}
+	</select>
+
+	<select id="getVideoLv2" resultType="map" parameterType="String">
+		SELECT
+		pornhub_video_id,
+		pornhub_video_name,
+		pornhub_video_type,
+		pornhub_video_sort,
+		pornhub_video_img_url,
+		pornhub_video_download,
+		pornhub_video_duration,
+		create_timestamp
+		FROM
+		pornhub_video
+		WHERE enable_flag = 1
+		AND
+		pornhub_video_id = #{id}
+	</select>
+</mapper>

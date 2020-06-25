@@ -1,0 +1,53 @@
+<!-- 这里是漫画的推荐内容 -->
+<!-- 推荐内容为2行6列 -->
+<div>
+	<img src="/resources/common/images/new.png" alt="" width="44" height="41">
+	<a style="font-size: 12px;" href="/resources/module/cartoon/html/cartoonLv4.html">漫画+</a>
+</div>
+
+<div class="row" id="row1">
+	<img id="cartoonLv1_loading" src="/resources/common/images/loading.gif">
+</div>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		loadmh();
+	});
+
+	function loadmh()
+	{
+		$.ajax({
+		url : "/resourcesController/getCartoonLv1.do", // 请求后台的URL（*）,
+		type : 'POST', // 请求方式（*）
+		dataType : "JSON",
+		data : {
+		"cur_page" : "0",
+		"page_size" : "12"
+		},
+		beforeSend : function()
+		{
+		},
+		complete : function()
+		{
+			$("#cartoonLv1_loading").attr("style", "display:none");
+		},
+		error : function(e)
+		{
+		},
+		success : function(result)
+		{
+			var htmle = "";
+			for ( var i in result)
+			{
+				htmle += "<div class='col-xs-6 col-md-2'>";
+				htmle += "<a class='thumbnail' href='resources/module/cartoon/html/cartoonLv2.html?" + result[i].pornhub_cartoon_id + "' >";
+				htmle += "<img id='mh_img"+i+"' class='img_c' src="+result[i].pornhub_cartoon_img_url+">";
+				htmle += "<p class='p1 cut'>" + result[i].pornhub_cartoon_name + "</p>";
+				htmle += "</a>";
+				htmle += "</div>";
+			}
+			$('#row1').append(htmle);
+		}
+		})
+	};
+</script>

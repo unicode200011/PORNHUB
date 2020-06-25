@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>ProjectHub</title>
+<!-- 图标 -->
+<link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon" />
+<!--告诉浏器能够响应屏幕宽度 -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+<link rel="stylesheet" href="/resources/common/css/common.css">
+</head>
+
+<body>
+
+	<div class="container">
+		<div id="top"></div>
+		<div class="row well well-sm">
+			<div class="col-xs-6 col-md-2">
+				<a id="mh0" class="thumbnail">
+					<img id="res_img" class="img-responsive center-block img_c">
+				</a>
+			</div>
+
+			<div class="col-xs-6 col-md-2">
+				<ul class="list-group">
+					<li class="list-group-item">
+						<span class="glyphicon glyphicon-font" style="font-size: 20px"></span>
+						<small id="pornhub_video_name" style="padding-left: 10px;"></small>
+					</li>
+					<li class="list-group-item">
+						<span class="glyphicon glyphicon-facetime-video" style="font-size: 20px"></span>
+						<small id="pornhub_video_duration" style="padding-left: 10px;"></small>
+					</li>
+					<li class="list-group-item">
+						<span class="glyphicon glyphicon-time" style="font-size: 20px"></span>
+						<small id="create_timestamp" style="padding-left: 10px;"></small>
+					</li>
+					<li class="list-group-item">
+						<span class="glyphicon glyphicon-save" style="font-size: 20px"></span>
+						<small id="pornhub_video_download" style="padding-left: 10px;">********</small>
+					</li>
+				</ul>
+				<a id="video_btn" class="btn btn-success btn-lg btn-block " onclick="autoLogin()">获取地址</a>
+			</div>
+		</div>
+		<div class="alert alert-danger alert-dismissible fade in " role="alert" style="display: none;" id="alertInfo">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
+			<h4>很抱歉</h4>
+			<p>该功能需要订阅</p>
+			<p>
+				<a class="btn btn-primary" href="/login.html">点击我去登录</a>
+				<a class="btn btn-success" href="/resources/module/customer/html/buyvip.html">点我去订阅</a>
+			</p>
+		</div>
+		<div class="row well well-sm" id="video_div"></div>
+	</div>
+
+</body>
+
+
+<script src="/resources/common/js/common.js"></script>
+<script type="text/javascript">
+	var pornhub_video_download;
+	$(document).ready(function()
+	{
+
+		$('#top').load('/resources/common/html/top.html');
+		DateFormat();
+		loadInfo();
+		loadVideo();
+	});
+
+	function loadInfo()
+	{
+		var url = decodeURI(window.location.href);
+
+		var argsIndex = url.split("id=");
+
+		var arg = argsIndex[1];
+
+		var userNameReg = /^\+?[1-9][0-9]*$/; //验证非零的正整数
+
+		if (userNameReg.test(arg))
+		{
+			$.ajax({
+			type : "GET",
+			url : "/resourcesController/getVideoLv2.do",
+			traditional : true,
+			dataType : "JSON",
+			data : {
+				"id" : arg
+			},
+			success : function(result)
+			{
+				var date = new Date(result.create_timestamp);
+				$('#res_img').attr("src", result.pornhub_video_img_url);
+				$("#pornhub_video_name").html(result.pornhub_video_name);
+				$("#pornhub_video_duration").html(result.pornhub_video_duration);
+				$("#create_timestamp").html(date.Format("yyyy-MM-dd"));
+				pornhub_video_download = result.pornhub_video_download;
+			}
+			});
+		}
+	};
+
+	function loadVideo()
+	{
+		var url = decodeURI(window.location.href);
+
+		var argsIndex = url.split("id=");
+
+		var arg = argsIndex[1];
+
+		var userNameReg = /^\+?[1-9][0-9]*$/; //验证非零的正整数
+
+		if (userNameReg.test(arg))
+		{
+			$.ajax({
+			type : "GET",
+			url : "/resourcesController/getVideoLv2Info.do",
+			traditional : true,
+			dataType : "JSON",
+			data : {
+				"id" : arg
+			},
+			success : function(result)
+			{
+				var htmle = "";
+
+				for ( var i in result)
+				{
+					htmle += "<div class ='col-md-3'>";
+					htmle += "<a class='thumbnail' href=" + result[i] + ">";
+					htmle += "<img class='img_c' src="+result[i]+">";
+					htmle += "</a>";
+					htmle += "</div>";
+				}
+				$('#video_div').append(htmle);
+			}
+			})
+		}
+	};
+
+	function autoLogin()
+	{
+		$.ajax({
+		type : "GET",
+		url : "/loginController/autoLogin.do",
+		traditional : true,
+		dataType : "JSON",
+		success : function(result)
+		{
+			if (result == 100)
+			{
+				$("#alertInfo").removeAttr("style");
+				$("#video_btn").attr("disabled", "disabled");
+			} else if (result == 200)
+			{
+				$("#video_btn").attr("disabled", "disabled");
+				$("#pornhub_video_download").html(pornhub_video_download);
+			}
+		}
+		});
+	}
+</script>
+
+</html>
+
+
+
+
+
+
+

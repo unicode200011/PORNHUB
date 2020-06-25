@@ -1,0 +1,220 @@
+<nav class="navbar navbar-default " role="navigation" id="topNav">
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+			<span class="sr-only">切换导航</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="/index.html">Project Hub</a>
+	</div>
+
+	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<ul class="nav navbar-nav">
+			<li id="tuijian" class="active">
+				<a href="/index.html">
+					推荐
+					<span class="sr-only">(current)</span>
+				</a>
+			</li>
+			<li id="manhua">
+				<a href="/resources/module/cartoon/html/cartoonLv4.html">漫画</a>
+			</li>
+			<li id="shipin">
+				<a href="/resources/module/video/html/videoLv4.html">视频</a>
+			</li>
+			<li id="youxi">
+				<a href="#">游戏</a>
+			</li>
+			<li id="xiaoshuo">
+				<a href="#">小说</a>
+			</li>
+		</ul>
+
+		<form class="navbar-form navbar-left">
+			<div class="input-group">
+				<input type="text" class="form-control" placeholder="你想要的..." id="searchText">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						查找
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-right">
+						<li>
+							<a href="#" onclick="searchRes(1)">漫画</a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li>
+							<a href="#" onclick="searchRes(2)">视频</a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li>
+							<a href="#" onclick="searchRes(3)">游戏</a>
+						</li>
+						<li role="separator" class="divider"></li>
+						<li>
+							<a href="#" onclick="searchRes(4)">小说</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</form>
+
+		<ul class="nav navbar-nav navbar-left">
+			<li>
+				<a href="#" onclick="switchMode()">
+					<span class="glyphicon glyphicon-eye-open"></span>
+					<b>夜间模式</b>
+				</a>
+			</li>
+		</ul>
+
+
+		<ul class="nav navbar-nav navbar-right" style="display: none;" id="vipTime_top">
+			<li>
+				<a href="/resources/module/customer/html/buyvip.html">
+					VIP:
+					<b id="vipTime_text"></b>
+				</a>
+			</li>
+		</ul>
+
+
+		<ul class="nav navbar-nav navbar-right" id="login">
+			<li>
+				<a href="/login.html">
+					<span class="glyphicon glyphicon-log-in"></span>
+					<b>登录</b>
+				</a>
+			</li>
+		</ul>
+
+		<ul class="nav navbar-nav navbar-right" id="userInfo" style="display: none;">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<b id="accountTop"></b>
+					<span class="caret"></span>
+				</a>
+
+
+				<ul class="dropdown-menu ">
+					<li>
+						<a href="#">我的收藏</a>
+					</li>
+					<li role="separator" class="divider"></li>
+					<li>
+						<a href="/resources/module/customer/html/buyvip.html">续费会员 </a>
+					</li>
+					<li role="separator" class="divider"></li>
+					<li>
+						<a href="#" onclick="logOut()">退出</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+
+
+	</div>
+</nav>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		activeClass();
+		cookieInfo();
+		nightTheme();
+	});
+	//选中效果
+	function activeClass()
+	{
+		var url = decodeURI(window.location.href);
+		var argsIndex = url.split("/");
+		var end = argsIndex[argsIndex.length - 1]
+
+		if (end.indexOf("cartoonLv2") >= 0 || end.indexOf("cartoonLv3") >= 0 || end.indexOf("cartoonLv4") >= 0)
+		{
+			$("li").removeClass("active")
+			$("#manhua").addClass("active");
+		}else if(end.indexOf("videoLv2") >= 0 || end.indexOf("videoLv3") >= 0 || end.indexOf("videoLv4") >= 0){
+			$("li").removeClass("active")
+			$("#shipin").addClass("active");
+		}
+	}
+	//显示名称
+	function cookieInfo()
+	{
+		var customer_account = $.cookie('pornhub_customer_account');
+		var vipTime_text = $.cookie('pornhub_customer_vip_time');
+
+		if (customer_account != undefined)
+		{
+			$("#accountTop").html(customer_account);
+			$("#userInfo").removeAttr("style");
+			$("#login").attr("style", "display:none");
+			
+			$("#vipTime_top").removeAttr("style");
+			$("#vipTime_text").html(vipTime_text);
+			
+		}
+	}
+	//登出
+	function logOut()
+	{
+		$.ajax({
+		type : "get",
+		url : "/loginController/logOut.do",
+		traditional : true,
+		dataType : "JSON",
+		success : function(result)
+		{
+			if (result == 1)
+			{
+				$(location).attr("href", "/index.html");
+			}
+		}
+		});
+	}
+
+	//夜间模式
+	function switchMode()
+	{
+		var backColor = $.cookie('backColor');
+		if (backColor == 0 || backColor == null)
+		{
+			$.cookie('backColor', '1', { expires: 7, path: '/' });
+			night_1();
+		}
+		if (backColor == 1)
+		{
+			$.cookie('backColor', '0', { expires: 7, path: '/' });
+			day_1();
+		}
+	}
+
+	function searchRes(c)
+	{
+		var searchText = $("#searchText").val().trim();
+		if (searchText != null && searchText != "")
+		{
+			switch (c)
+			{
+				//漫画
+				case 1:
+					$(location).attr("href", "/resources/module/cartoon/html/cartoonLv4.html?searchText="+searchText);
+					break;
+				//视频
+				case 2:
+					$(location).attr("href", "/resources/module/video/html/videoLv4.html?searchText="+searchText);
+					break;
+				//游戏
+				case 3:
+					$(location).attr("href", "/index.html");
+					break;
+				//小说
+				case 4:
+					$(location).attr("href", "/index.html");
+					break;
+			}
+		}
+
+	}
+</script>

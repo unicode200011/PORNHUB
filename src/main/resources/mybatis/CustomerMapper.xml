@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.org.customer.dao.CustomerDao">
+	<select id="recharge" parameterType="map" resultType="map">
+		SELECT
+		pornhub_card_id,pornhub_card_number,pornhub_card_password,pornhub_card_type,enable_flag
+		FROM
+		pornhub_card
+		WHERE pornhub_card_number = #{pornhub_card_number}
+		AND pornhub_card_password = #{pornhub_card_password};
+	</select>
+
+	<update id="updateCustomerVipTime" parameterType="map">
+
+		UPDATE
+		pornhub_customer
+		SET
+		pornhub_customer_vip_time = #{pornhub_customer_vip_time}
+		WHERE pornhub_customer_account = #{pornhub_customer_account};
+
+	</update>
+
+	<update id="updateCardFlag" parameterType="map">
+		UPDATE
+		pornhub_card
+		SET
+		enable_flag = '0'
+		WHERE pornhub_card_number = #{pornhub_card_number}
+		AND pornhub_card_password = #{pornhub_card_password};
+	</update>
+
+	<insert id="insertRecharge" parameterType="map">
+		INSERT INTO pornhub_customer_recharge (
+		pornhub_customer_id,
+		pornhub_card_id,
+		pornhub_customer_recharge_number,
+		pornhub_customer_recharge_time
+		)
+		VALUES
+		(
+		#{pornhub_customer_id},#{pornhub_card_id},#{pornhub_customer_recharge_number},#{pornhub_customer_recharge_time}
+		) ;
+	</insert>
+
+	<select id="getCustomer" parameterType="map" resultType="map">
+		SELECT
+		pornhub_customer_id,
+		pornhub_customer_account,
+		pornhub_customer_type,
+		pornhub_customer_register_ip,
+		pornhub_customer_last_login_ip,
+		pornhub_customer_vip_time,
+		pornhub_customer_invitation_code,
+		create_user,
+		create_timestamp,
+		last_update_user,
+		last_update_timestamp,
+		enable_flag
+		FROM
+		pornhub_customer
+		WHERE pornhub_customer_account = #{pornhub_customer_account}
+	</select>
+
+</mapper>

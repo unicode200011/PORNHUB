@@ -1,0 +1,54 @@
+<!-- 这里是漫画的推荐内容 -->
+<!-- 推荐内容为2行6列 -->
+<div>
+	<img src="/resources/common/images/new.png" alt="" width="44" height="41">
+	<a style="font-size: 12px;" href="/resources/module/video/html/videoLv4.html">视频+</a>
+</div>
+
+<div class="row" id="videoLv1">
+	<img id="videoLv1_loading" src="/resources/common/images/loading.gif">
+</div>
+<script type="text/javascript">
+	$(document).ready(function()
+	{
+		loadVideo();
+	});
+
+	function loadVideo()
+	{
+		$.ajax({
+		url : "/resourcesController/getVideoLv4.do", // 请求后台的URL（*）,
+		type : 'GET', // 请求方式（*）
+		dataType : "JSON",
+		data : {
+		"cur_page" : "0",
+		"page_size" : "12"
+		},
+		beforeSend : function()
+		{
+		},
+		complete : function()
+		{
+			$("#videoLv1_loading").attr("style", "display:none");
+		},
+		error : function(e)
+		{
+		},
+		success : function(result)
+		{
+			var htmle = "";
+			for ( var i in result)
+			{
+				htmle += "<div class='col-xs-6 col-md-2'>";
+				htmle += "<a class='thumbnail' href='resources/module/video/html/videoLv2.html?id=" + result[i].pornhub_video_id + "' >";
+				htmle += "<img id='sp_img"+i+"' class='img_c' src="+result[i].pornhub_video_img_url+">";
+				htmle += "<p class='p1 cut'>" + result[i].pornhub_video_name + "</p>";
+				htmle += "</a>";
+				htmle += "</div>";
+			}
+			$('#videoLv1').append(htmle);
+	
+		}
+		})
+	};
+</script>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>ProjectHub</title>
+<!-- 图标 -->
+<link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon" />
+<!--告诉浏览器能够响应屏幕宽度 -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+<style type="text/css">
+</style>
+</head>
+<body class="container">
+	<div class="well well-sm">
+		<h1>pornhub_cartoon 表插入功能</h1>
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">漫画名</span>
+			<input id="pornhub_cartoon_name" type="text" class="form-control" placeholder="pornhub_cartoon_name" maxlength="100">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">漫画作者</span>
+			<input id="pornhub_cartoon_author" type="text" class="form-control" placeholder="pornhub_cartoon_author" maxlength="25">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">漫画类型</span>
+			<input id="pornhub_cartoon_type" type="text" class="form-control" placeholder="pornhub_cartoon_type" maxlength="25" value="1">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">漫画细分</span>
+			<input id="pornhub_cartoon_sort" type="text" class="form-control" placeholder="pornhub_cartoon_sort" maxlength="25" value="1">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">漫画封面地址</span>
+			<input id="pornhub_cartoon_img_url" type="text" class="form-control" placeholder="pornhub_cartoon_img_url" maxlength="25" value="/res/mh/xxxx.jpg">
+		</div>
+
+		<div class="input-group input-group-lg">
+			<span class="input-group-addon">漫画页数</span>
+			<input id="pornhub_cartoon_pages" type="text" class="form-control" placeholder="pornhub_cartoon_pages" maxlength="25">
+		</div>
+		<h2>
+			返回ID:
+			<b id="1_id"></b>
+		</h2>
+
+		<br>
+		<button type="button" class="btn btn-success btn-lg btn-block" onclick="insertCartoon()">关联资源pornhub_cartoon</button>
+	</div>
+
+
+	<div class="well well-sm">
+		<h1>pornhub_cartoon_info 表插入功能 (停用中)</h1>
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">资源关联ID </span>
+			<input id="pornhub_cartoon_id" type="text" class="form-control" placeholder="?" maxlength="25">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">文件存放详细地址 </span>
+			<input id="fileName" type="text" class="form-control" placeholder="/res/mhinfo/?/" maxlength="25">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">遍历次数 - 代表页数</span>
+			<input id="number" type="text" class="form-control" placeholder="?" maxlength="25">
+		</div>
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">命名格式 </span>
+			<input id="format" type="text" class="form-control" placeholder="000 or 0 or 无" maxlength="25">
+		</div>
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">图片格式</span>
+			<input id="imgFormat" type="text" class="form-control" placeholder="webp，bmp,jpg,png,tif,gif..." maxlength="25">
+		</div>
+		<h2>
+			返回ID:
+			<b id="2_id"></b>
+		</h2>
+		<br>
+		<button type="button" class="btn btn-success btn-lg btn-block" onclick="alert('无效');">关联资源pornhub_cartoon_info</button>
+	</div>
+
+
+	<div class="well well-sm">
+		<h1>pornhub_video 表插入功能</h1>
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">视频名称</span>
+			<input id="pornhub_video_name" type="text" class="form-control" placeholder="名字还需要我提示吗????" maxlength="100">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">视频类型</span>
+			<input id="pornhub_video_type" type="text" class="form-control" placeholder="1" maxlength="25" value="1">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">视频标签</span>
+			<input id="pornhub_video_sort" type="text" class="form-control" placeholder="1" maxlength="25" value="1">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">视频封面</span>
+			<input id="pornhub_video_img_url" type="text" class="form-control" placeholder="/res/sp/xxxx.jpg"  value="/res/sp/xxxx.jpg">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">视频下载地址</span>
+			<input id="pornhub_video_download" type="text" class="form-control" placeholder="任何可以访问的云盘链接..."  value="链接：https://pan.baidu.com/s/XXXXX 提取码：j74g">
+		</div>
+
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">视频时长</span>
+			<input id="pornhub_video_duration" type="text" class="form-control" placeholder="00:23:26" maxlength="25" value="00:00:00">
+		</div>
+
+		<h2>
+			返回ID:
+			<b id="3_id"></b>
+		</h2>
+		<br>
+		<button type="button" class="btn btn-success btn-lg btn-block" onclick="insertVideo()">关联资源pornhub_video</button>
+	</div>
+
+
+
+	<div class="well well-sm">
+		<h1>pornhub_card 生成卡号卡密功能</h1>
+		<b>格式：卡号+空格+密码，一行一张卡，如：A1B2C3D4F5E8 9876543210</b>
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">充值卡数量</span>
+			<input id="card_1" type="text" class="form-control" placeholder="生成多少张卡?" maxlength="25">
+		</div>
+		<div class="input-group input-group-lg ">
+			<span class="input-group-addon">充值卡类型</span>
+			<input id="card_2" type="text" class="form-control" placeholder="多少面额的卡?" maxlength="25">
+		</div>
+		<br>
+		<button id="" type="button" class="btn btn-success btn-lg btn-block" onclick="insertCard()">关联资源pornhub_card</button>
+		<br>
+		<div id="card_text"></div>
+	</div>
+
+
+	<script src="/resources/common/js/common.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+		});
+
+		function insertVideo()
+		{
+			var pornhub_video_name = $("#pornhub_video_name").val().trim();
+			var pornhub_video_type = $("#pornhub_video_type").val().trim();
+			var pornhub_video_sort = $("#pornhub_video_sort").val().trim();
+			var pornhub_video_img_url = $("#pornhub_video_img_url").val().trim();
+			var pornhub_video_duration = $("#pornhub_video_duration").val().trim();
+			var pornhub_video_download = $("#pornhub_video_download").val().trim();
+
+
+			if (pornhub_video_name != "" && pornhub_video_type != "" && pornhub_video_sort != "" && pornhub_video_img_url != "" && pornhub_video_duration != "")
+			{
+				$.ajax({
+				type : "POST",
+				url : "/resManageController/insertVideo.do",
+				traditional : true,
+				dataType : "JSON",
+				data : {
+				"pornhub_video_name" : pornhub_video_name,
+				"pornhub_video_type" : pornhub_video_type,
+				"pornhub_video_sort" : pornhub_video_sort,
+				"pornhub_video_img_url" : pornhub_video_img_url,
+				"pornhub_video_duration" : pornhub_video_duration,
+				"pornhub_video_download" : pornhub_video_download
+				},
+				success : function(result)
+				{
+					$("#3_id").html(result);
+				}
+				});
+			} else
+			{
+				alert("参数不能为空");
+			}
+		};
+
+		function insertCard()
+		{
+
+			var card_1 = $("#card_1").val().trim();
+			var card_2 = $("#card_2").val().trim();
+
+			if (card_1 != "" && card_2 != "")
+			{
+				$.ajax({
+				type : "POST",
+				url : "/resManageController/insertCard.do",
+				traditional : true,
+				dataType : "JSON",
+				data : {
+				"card_1" : card_1,
+				"card_2" : card_2
+				},
+				success : function(result)
+				{
+					for ( var i in result)
+					{
+						var htmle = "<p class='text-center'>" + result[i].pornhub_card_number + "     " + result[i].pornhub_card_password + "</p>";
+						$("#card_text").append(htmle);
+					}
+				}
+				});
+			} else
+			{
+				alert("参数不能为空");
+			}
+		};
+
+		function insertCartoon()
+		{
+
+			var pornhub_cartoon_name = $("#pornhub_cartoon_name").val().trim();
+			var pornhub_cartoon_author = $("#pornhub_cartoon_author").val().trim();
+			var pornhub_cartoon_img_url = $("#pornhub_cartoon_img_url").val().trim();
+			var pornhub_cartoon_pages = $("#pornhub_cartoon_pages").val().trim();
+			var pornhub_cartoon_sort = $("#pornhub_cartoon_sort").val().trim();
+			var pornhub_cartoon_type = $("#pornhub_cartoon_type").val().trim();
+
+			if (pornhub_cartoon_name != "" && pornhub_cartoon_author != "" && pornhub_cartoon_img_url != "" && pornhub_cartoon_pages != "" && pornhub_cartoon_sort != "" && pornhub_cartoon_type != "")
+			{
+				$.ajax({
+				type : "POST",
+				url : "/resManageController/insertCartoon.do",
+				traditional : true,
+				dataType : "JSON",
+				data : {
+				"pornhub_cartoon_name" : pornhub_cartoon_name,
+				"pornhub_cartoon_author" : pornhub_cartoon_author,
+				"pornhub_cartoon_img_url" : pornhub_cartoon_img_url,
+				"pornhub_cartoon_pages" : pornhub_cartoon_pages,
+				"pornhub_cartoon_sort" : pornhub_cartoon_sort,
+				"pornhub_cartoon_type" : pornhub_cartoon_type
+				},
+				success : function(result)
+				{
+					$("#1_id").html(result);
+				}
+				});
+			} else
+			{
+				alert("参数不能为空");
+			}
+		};
+
+		function insertRes()
+		{
+
+			var pornhub_cartoon_id = $("#pornhub_cartoon_id").val().trim();
+			var fileName = $("#fileName").val().trim();
+			var number = $("#number").val().trim();
+			var format = $("#format").val().trim();
+			var imgFormat = $("#imgFormat").val().trim();
+
+			if (pornhub_cartoon_id != "" && fileName != "" && number != "" && format != "" && imgFormat != "")
+			{
+				$.ajax({
+				type : "POST",
+				url : "/resManageController/insertRes.do",
+				traditional : true,
+				dataType : "JSON",
+				data : {
+				"pornhub_cartoon_id" : pornhub_cartoon_id,
+				"fileName" : fileName,
+				"number" : number,
+				"format" : format,
+				"imgFormat" : imgFormat
+				},
+				success : function(result)
+				{
+					$("#2_id").html(result);
+				}
+				});
+			} else
+			{
+				alert("参数不能为空");
+			}
+		}
+	</script>
+</body>
+</html>

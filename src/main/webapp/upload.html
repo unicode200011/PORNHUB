@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ProjectHub</title>
+    <!-- 图标 -->
+    <link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon"/>
+    <!--告诉浏览器能够响应屏幕宽度 -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css"/>
+</head>
+<body class="container">
+<div class="upload-wrap">
+    <input type="file" id="md5File" multiple="multiple" name="test"/>
+</div>
+</body>
+
+<script src="/resources/common/js/common.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/js/fileinput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/5.0.9/js/locales/zh.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#md5File').fileinput({
+            language: 'zh',
+            uploadUrl: 'http://localhost:8080/sign',
+            showCaption: true,//是否显示被选文件的简介
+            showUpload: true,//是否显示上传按钮
+            showRemove: true,//是否显示删除按钮
+            showClose: true,//是否显示关闭按钮
+            enctype: 'multipart/form-data',
+            uploadAsync: false, //false 同步上传，后台用数组接收，true 异步上传，每次上传一个file,会调用多次接口
+            allowedFileExtensions: ['jpg', 'png'],//接收的文件后缀
+            layoutTemplates: {
+                actionUpload: ''//就是让文件上传中的文件去除上传按钮
+                //	      actionDelete: '',//去除删除按钮
+            },
+            browseClass: 'btn btn-primary',
+            maxFileCount: 0,
+            minFileCount: 1,
+        });
+        
+        $('#md5File').on('filebatchuploadsuccess', function (res) {
+            console.log(res);
+        });
+        $('#md5File').on('filebatchuploaderror', function (event, data, msg) {
+        });
+    });
+
+
+</script>
+</html>

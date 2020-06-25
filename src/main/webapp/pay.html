@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>login</title>
+    <link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="well well-sm">
+        <div id="userNameDiv" class="row col-md-offset-4">
+            <div class="col-md-6 col-xs-12">
+                <div class="input-group input-group-lg ">
+                    <span class="input-group-addon">充值金额</span>
+                    <input id="number" type="text" class="form-control" placeholder="" maxlength="25">
+                    <span class="input-group-btn">
+							<button id="cleanerAccount" type="button" class="btn btn-default">
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row col-md-offset-4">
+    <div class="col-md-6">
+        <button id="loginBtn" type="button" class="btn btn-primary btn-lg btn-block" onclick="testPay()">充值</button>
+    </div>
+</div>
+
+
+<script src="/resources/common/js/common.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+
+    function testPay() {
+		var myDate = new Date();
+
+		var number = $("#number").val().trim();
+		var pay_memberid = "200697206";
+		var pay_orderid = "test11111";
+		var pay_applydate = myDate.getTime();
+		var pay_bankcode = "903";
+		var pay_notifyurl = "";
+        var pay_callbackurl ="";
+        var pay_amount = "10";
+        var pay_md5sign = "";
+        var pay_productname ="xishi_test_pay";
+        $.ajax({
+            type: "POST",
+            url: "https://p.sfpay.vip/Pay_Index.html",
+            traditional: true,
+            dataType: "JSON",
+            data: {
+                "account": number,
+                "passWord": passWord
+            },
+            success: function (result) {
+                if (result == 100) {
+                } else if (result == 200) {
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

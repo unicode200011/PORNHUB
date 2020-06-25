@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>ProjectHub</title>
+<!-- 图标 -->
+<link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon" />
+<!--告诉浏览器能够响应屏幕宽度 -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+<link rel="stylesheet" href="/resources/common/css/common.css">
+
+</head>
+<body>
+	<div class="container" id="recommendDiv">
+		<div id="top"></div>
+
+		<div id='recommendDivMH' class="well well-sm"></div>
+		<div id='recommendDivSP' class="well well-sm"></div>
+		<!-- 
+		<div id='recommendDivYX' class="well"></div>
+
+		<div id='recommendDivXS' class="well"></div>
+		 -->
+	</div>
+	<!-- 推荐页面 recommendMain  - mid end-->
+	<script src="/resources/common/js/common.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+
+			$('#top').load('/resources/common/html/top.html');
+			$('#recommendDivMH').load('/resources/module/cartoon/html/cartoonLv1.html');
+			$('#recommendDivSP').load('/resources/module/video/html/videoLv1.html');
+			//	$('#recommendDivYX').load('resources/module/recommend/html/yx.html');
+			//	$('#recommendDivXS').load('resources/module/recommend/html/xs.html');
+		});
+	</script>
+</body>
+</html>

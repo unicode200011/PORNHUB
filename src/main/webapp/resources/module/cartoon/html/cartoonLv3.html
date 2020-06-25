@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>ProjectHub</title>
+<!-- 图标 -->
+<link rel="icon" href="/resources/common/images/a.ico" type="image/x-icon" />
+<!--告诉浏器能够响应屏幕宽度 -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="/resources/plugins/bootstrap.min.css">
+<style type="text/css">
+</style>
+</head>
+<body>
+	<div class="container">
+		<div id="top"></div>
+		<div class="alert alert-danger alert-dismissible fade in" role="alert" style="display: none;" id="alertInfo">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">×</span>
+			</button>
+			<h4>很抱歉</h4>
+			<p>只有登录后才能观看全部内容,你还在犹豫什么!注册只需3秒钟!</p>
+			<p>
+				<a class="btn btn-primary" href="/login.html">点击我去登录</a>
+				<a class="btn btn-success" href="/reg.html">点击我去注册</a>
+			</p>
+		</div>
+
+		<div class="row well well-sm" id="main"></div>
+
+		<div id="tip">
+			<img id="tip_0" src="/resources/common/images/loading.gif" width="44px" height="41px" style="display: none;">
+			<b id="tip_2" class="text-danger">向下滑自动加载</b>
+		</div>
+
+
+		<div class="alert alert-success" role="alert" style="display: none;" id="p_l">
+			<h4 class="text-center">所有内容已经加载完毕</h4>
+		</div>
+
+	</div>
+</body>
+<script src="/resources/common/js/common.js"></script>
+<script type="text/javascript">
+	var cur_page = 0; //开始
+	var page_size = 10;//结束
+	var url = decodeURI(window.location.href);
+	var argsIndex = url.split("?");
+	var arg = argsIndex[1];
+	var loads = true; //是否继续加载
+	$(document).ready(function()
+	{
+		//autoLogin();
+		$('#top').load('/resources/common/html/top.html');
+		loadRes();
+		$(window).scroll(function()
+		{
+			var scrollTop = $(window).scrollTop();
+			var owinH = $(window).height();
+			var odocH = $(document).height();
+			if (scrollTop + owinH >= odocH)
+			{
+				//每次到底 在查询10页
+				cur_page = cur_page + 10;
+				page_size = page_size + 10;
+				loadRes();
+			}
+		});
+	});
+	//检查用户是否已经登录
+	/*
+	function autoLogin()
+	{
+		$.ajax({
+		type : "GET",
+		url : "/loginController/autoLogin.do",
+		traditional : true,
+		dataType : "JSON",
+		success : function(result)
+		{
+			if (result == 100)
+			{
+				$("#alertInfo").removeAttr("style");
+			} else if (result == 200)
+			{
+				loadRes();
+				$(window).scroll(function()
+				{
+					var scrollTop = $(window).scrollTop();
+					var owinH = $(window).height();
+					var odocH = $(document).height();
+					if (scrollTop + owinH >= odocH)
+					{
+						//每次到底 在查询10页
+						cur_page = cur_page + 10;
+						page_size = page_size + 10;
+						loadRes();
+					}
+				});
+			}
+		}
+		});
+	}*/
+
+	function loadRes()
+	{
+		if (loads)
+		{
+			$.ajax({
+			url : "/resourcesController/getCartoonLv3.do", // 请求后台的URL（*）,
+			type : 'GET', // 请求方式（*）
+			async : false,
+			dataType : "JSON",
+			data : {
+			"pornhub_cartoon_id" : arg,
+			"cur_page" : cur_page,
+			"page_size" : page_size
+			},
+			beforeSend : function()
+			{
+				$("#tip_0").attr("style", "display:");
+				$("#tip_2").html("加载中...");
+			},
+			complete : function()
+			{
+				$("#tip_0").attr("style", "display:none");
+				$("#tip_2").html("向下滑自动加载");
+			},
+			error : function(e)
+			{
+			},
+			success : function(result)
+			{
+				if ("{}" != JSON.stringify(result))
+				{
+					var htmle = "";
+					for ( var i in result)
+					{
+						htmle += "<img class='img-responsive center-block' src="+result[i]+">";
+						htmle += "<p class='p1 text-center'>" + i + "</p>";
+					}
+					$('#main').append(htmle);
+				} else
+				{
+					
+					loads = false;
+					$("#p_l").removeAttr("style");
+					$("#tip").attr("style", "display:none");
+				}
+				/*
+				if (result.length > 0)
+				{
+					var htmle = "";
+					for ( var i in result)
+					{
+						htmle += "<img class='img-responsive center-block' src="+result[i].pornhub_cartoon_info_url+">";
+						htmle += "<p class='p1 text-center'>" + result[i].pornhub_cartoon_info_name + "</p>";
+					}
+					$('#main').append(htmle);
+
+				} else
+				{
+					loads = false;
+					$("#p_l").removeAttr("style");
+				}*/
+			}
+			})
+		} else
+		{
+			$("#p_l").removeAttr("style");
+			$("#tip").attr("style", "display:none");
+		}
+	}
+
+</script>
+</html>
